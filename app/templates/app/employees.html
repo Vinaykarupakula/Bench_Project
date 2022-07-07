@@ -1,0 +1,233 @@
+{% extends "app/base.html" %} {% block head %}
+<title>Home</title>
+
+
+
+{% endblock %} {% block body %}
+
+
+<div class="container">
+
+    <h3 class="mt-4 text-center">All Records Here</h3><br><br>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <form action="/searchposts/" method="GET" value="{{request.GET.q}}">
+                    <input type="text" name="q" value="{{request.GET.q}}" placeholder="Search Name/Id" required>
+                    <input type="submit" name="submit" value="Search" />
+                </form>
+            </div>
+        </div><br><br>
+        <div class="col-md-6">
+            <div class="input-group">
+                <form action="/date_range/" method="GET" value="{{request.GET.q}}">
+                    StartDate: <input type="date" id="birthday" name="start_date" required> &nbsp EndDate: <input type="date" id="birthday" name="end_date" required>&nbsp
+                    <input type="submit" name="submit" value="Search" />
+                </form>
+            </div>
+        </div>
+
+
+        <div class="col-md-2">
+            <div class="float-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+          <i class="fas fa-plus"></i>
+          Add
+        </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="searchOutput">
+        <table id="employeeTable" class="table table-striped table-hover mx-auto w-auto" style="width: 100%">
+            <thead class="table-secondary">
+                <tr>
+                    {% comment %}
+                    <th>S.NO</th> {% endcomment %}
+                    <th>Empolyee ID</th>
+                    <th>Employee Full Name</th>
+                    <th>Employee Status</th>
+                    <th>Employee Type</th>
+                    <th>Department</th>
+                    <th>Skill Set</th>
+
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Client Name</th>
+                    <th>Project Name</th>
+                    <th>Previous Client Name</th>
+                    <th>Reason For Offboard</th>
+                    <th>Email </th>
+                    <th>experience </th>
+                    <th>Comments</th>
+                    <th>Duration</th>
+                    <th>Option</th>
+
+
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    {% comment %}
+                    <td>{{employee.id}}</td> {% endcomment %}
+                    <td>{{ employee.emp_id }}</td>
+                    <td>{{ employee.emp_name }}</td>
+                    <td>{{ employee.emp_status }}</td>
+                    <td>{{ employee.emp_type }}</td>
+                    <td>{{ employee.department }}</td>
+                    <td>{{ employee.skill_set }}</td>
+
+                    <td>{{ employee.start_date }}</td>
+                    <td>{{ employee.end_date }}</td>
+                    <td>{{ employee.client_name }}</td>
+                    <td>{{ employee.project_name }}</td>
+                    <td>{{ employee.previous_client }}</td>
+                    <td>{{ employee.reason_for_offboard }}</td>
+                    <td>{{ employee.email}}</td>
+                    <td>{{ employee.experience }}</td>
+                    <td>{{ employee.comments }}</td>
+                    <td>{{ employee.duration}}</td>
+                    <td>
+                        <a href="update/?update_id={{employee.id}}" class="btn btn-success" class="btn btn-primary">Edit</a> {% comment %} <a href="delete/{{employee.emp_id}}" class="btn btn-danger" id='{{employee.emp_id}}'>Delete</a> {% endcomment %}
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Employee Model -->
+    <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLable" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action='/add_employees/'>
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <input style="width:100%;" name="emp_id" type="number" class="form-control mb-2" placeholder="Employee ID" required>
+
+                            <input style="width:100%;" name="emp_name" type="text" class="form-control mb-2" placeholder="Employee Name" required> {% comment %} <input style="width:100%;" name="last_name" type="text" class="form-control mb-2" placeholder=""
+                                required> {% endcomment %}
+
+                            <label for="cars">Employee Status</label>
+                            <select id="cars" name="emp_status">
+                <option value="Not Reporting">Not Reporting</option>
+                <option value="Maternity Leave">Maternity Leave</option>
+                <option value="Active">Active</option>
+                <option value="Deployed">Deployed</option>
+                <option value="Exit">Exit</option>
+                <option value="Selection in hand">Selection in hand</option>
+                <option value="Hold">Hold </option>
+                <option value="Absconding">Absconding</option>
+              </select><br><br>
+
+                            <label for="cars">Employee Type:</label>
+                            <select id="cars" name="emp_type">
+                <option value="Bench">Bench</option>
+                <option value="Lateral">Lateral</option>
+              </select><br><br>
+
+                            <input style="width:100%;" name="department" type="text" class="form-control mb-2" placeholder="Department" required><br><br>
+
+                            <input style="width:100%;" name="skill_set" type="text" class="form-control mb-2" placeholder="Skill Set" required><br><br>
+
+
+
+
+                            <label for="start_date">Start-Date:</label>
+                            <input type="date" value="2022-02-20" id="birthday" name="start_date"><br><br> {% comment %} <label for="start_date">End Date:</label>
+                            <input type="date" value="2022-02-20" id="birthday" name="end_date"><br><br> {% endcomment %}
+
+
+
+                            <input style="width:100%;" name="client_name" type="text" class="form-control" placeholder="Client Name" required><br><br>
+
+                            <input style="width:100%;" name="project_name" type="text" class="form-control" placeholder="Project Name" required><br><br>
+
+                            <input style="width:100%;" name="previous_client" type="text" class="form-control" placeholder="Previous Client" required><br><br>
+
+                            <label for="cars">Reason For Off Board:</label>
+                            <select id="cars" name="reason_for_offboard">
+                <option value="project end ">project End </option>
+                <option value="performance issue">Performance Issue</option>
+                <option value="Other">Other</option>
+              </select><br><br>
+
+                            <input style="width:100%;" name="email" type="email" class="form-control mb-2" placeholder="Eamil ID (Organization Email)" required><br><br> {% comment %} <label for="cars">Experience</label>
+                            <select id="cars" name="experience">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+
+              </select><br><br> {% endcomment %}
+
+
+                            <input style="width:100%;" name="experience" type="number" step="0.1" class="form-control mb-2" placeholder="Enter Experience   Ex: 2.3 or 3" required><br><br> {% comment %} <label for="cars">Experience Range</label>
+                            <select id="cars" name="exp_range">
+                <option value="1-2">1-2</option>
+                <option value="2-3">2-3</option>
+                <option value="3-4">3-4</option>
+                <option value="4-5">4-5</option>
+                <option value="5-6">5-6</option>
+                <option value="6-7">6-7</option>
+    
+
+              </select><br><br> {% endcomment %}
+
+                            <input style="width:100%;" name="comments" type="text" class="form-control mb-2" placeholder="comments" required><br><br>
+
+                        </div>
+                        <button class="btn btn-primary" type="submit" name="button">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Employee Model -->
+
+
+
+</div>
+
+
+
+
+
+{% comment %}
+<form action="/download/" method="post">
+    {% csrf_token %}
+    <td align="center"> <input type="submit" value="download"></td>
+</form> {% endcomment %}
+
+
+<div class="col-md-12">
+    <div class="float-end">
+        <form action="/download/" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">
+      <i class="fas fa-download"></i>
+      download
+    </button>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}

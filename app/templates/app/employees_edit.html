@@ -1,0 +1,21 @@
+{% extends "app/base.html" %}
+{% load crispy_forms_tags %}
+{% block head %}
+<title>Update</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  <div class="form-control form-control-md">
+    <h1>You are editing !!</h1>
+      <form action="" method="post">
+          {% csrf_token %} 
+          {{form | crispy}}
+        <button class="btn btn-primary" type="submit" name="button">Save</button>
+      </form> 
+  </div>
+</div>      
+      
+
+{% endblock %}
